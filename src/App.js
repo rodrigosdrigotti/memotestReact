@@ -1,23 +1,88 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
+import { Card } from './components/Card';
 import './App.css';
 
+import { images } from './imagesImport';
+ 
 function App() {
+
+  const [cards, setCards] = useState([]);
+  const [firstCard, setFirstCard] = useState({});
+  const [secondCard, setSecondCard] = useState({});
+
+  const [unflippedCards, setUnflippedCards] = useState([]);
+  const [disabledCards, setDisabledCards] = useState([]);
+
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      let temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+  }
+
+  useEffect(() => {
+    shuffleArray(images);
+    setCards(images);
+  }, []);
+
+  useEffect(() => {
+    checkMatch();
+  }, [secondCard]);  
+
+  const flipCard = (name, number) => {
+    if (firstCard.name === name && firstCard.number === number) {
+      return 0;
+    }
+    if (!firstCard.name) {
+      setFirstCard({ name, number });
+    }
+    else if (!secondCard.name) {
+      setSecondCard({ name, number });
+    }
+    return 1;
+  }
+
+  const checkMatch = () => {
+    if (firstCard.name && secondCard.name) {
+      const match = firstCard.name === secondCard.name;
+      match ? disableCards() : unflipCards();
+    }
+  }
+
+  const disableCards = () => {
+    setDisabledCards([firstCard.number, secondCard.number]);
+    resetCards();
+  };
+
+  const unflipCards = () => {
+    setUnflippedCards([firstCard.number, secondCard.number]);
+    resetCards();
+  };
+
+  const resetCards = () => {
+    setFirstCard({});
+    setSecondCard({});
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='app'>
+      <button>Reset</button>
+      <div className='cards-container'>
+        {
+          cards.map((card, index) => (
+            <Card 
+              name={card.player} 
+              number={index} 
+              frontFace={card.src} 
+              flipCard={flipCard} 
+              unflippedCards={unflippedCards}
+              disabledCards={disabledCards}
+              />
+          ))
+        }
+      </div>
     </div>
   );
 }
