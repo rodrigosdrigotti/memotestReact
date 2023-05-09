@@ -2,6 +2,27 @@
     margin: 0;
     padding: 0;
 }
+.bodyApp {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(0, 0, 0);
+}
+.btn-beginGame {
+    padding: 20px;
+    width: 250px;
+    border-radius: 10px;
+    border: none;
+    font-size: 20px;
+    background-color: rgb(255, 104, 49);
+    cursor: pointer;
+}
+.btn-beginGame:hover {
+    transform: scale(1.05);
+    transition: 0.25s ease-in-out;
+    background-color: rgb(239, 81, 24);
+} 
 .app {
     background-color: rgb(185, 185, 185);
     height: 100vh;

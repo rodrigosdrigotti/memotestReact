@@ -3,9 +3,10 @@ import { Card } from './components/Card';
 import './App.css';
 
 import { images } from './imagesImport';
- 
+
 function App() {
 
+  const [playing, setPlaying] = useState(false);
   const [cards, setCards] = useState([]);
   const [firstCard, setFirstCard] = useState({});
   const [secondCard, setSecondCard] = useState({});
@@ -29,8 +30,8 @@ function App() {
 
   useEffect(() => {
     checkMatch();
-  }, [secondCard]);  
-
+  }, [secondCard]);
+  
   const flipCard = (name, number) => {
     if (firstCard.name === name && firstCard.number === number) {
       return 0;
@@ -66,24 +67,44 @@ function App() {
     setSecondCard({});
   }
 
+  const startGame = () => {
+    setPlaying(true);
+    setDisabledCards([]);
+  }
+
+  const reiniciarJuego = () => {
+    setPlaying(false);
+    setDisabledCards([]);
+    shuffleArray(images);
+    setCards(images);
+  }
+
   return (
-    <div className='app'>
-      <button>Reset</button>
-      <div className='cards-container'>
-        {
-          cards.map((card, index) => (
-            <Card 
-              name={card.player} 
-              number={index} 
-              frontFace={card.src} 
-              flipCard={flipCard} 
-              unflippedCards={unflippedCards}
-              disabledCards={disabledCards}
-              />
-          ))
-        }
-      </div>
-    </div>
+    <section className='bodyApp'>
+      <button className='btn-beginGame' onClick={ () => {startGame()} }>Comenzar Juego</button>
+      { playing
+        ?
+        <div className='app'>
+          <button onClick={ () => {reiniciarJuego()}}>Reiniciar Juego</button>
+          <div className='cards-container'>
+            {
+              cards.map((card, index) => (
+                <Card
+                  name={card.player}
+                  number={index}
+                  frontFace={card.src}
+                  flipCard={flipCard}
+                  unflippedCards={unflippedCards}
+                  disabledCards={disabledCards}
+                />
+              ))
+            }
+          </div>
+        </div>
+        :
+        ""
+      }
+    </section>
   );
 }
 
